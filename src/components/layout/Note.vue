@@ -9,28 +9,21 @@
       </div>
     </div>
     <footer class="card-footer ">
-      <a @click.prevent="editNote" class="card-footer-item">Edit</a>
-      <a @click.prevent="deleteNote" class="card-footer-item">Delete</a>
+      <a @click.prevent="storeNotes.editNote(note.id)" class="card-footer-item">Edit</a>
+      <a @click.prevent="storeNotes.deleteNote(note.id)" class="card-footer-item">Delete</a>
     </footer>
   </div>
 </template>
 
 <script setup>
 import { computed } from "vue";
+import { useNotesStore } from "../../stores/storeNotes"
+
+const storeNotes = useNotesStore()
 
 const props = defineProps({ note: { type: Object, required: true } })
-const emit = defineEmits(["deleteNote", "editNote"])
 
 const noteLength = computed(() => props.note.content.length + " " + (props.note.content.length > 1 ? "characters" : "character"))
-
-function editNote() {
-  emit("editNote", props.note.id)
-}
-
-function deleteNote() {
-  emit("deleteNote", props.note.id)
-}
-
 
 </script>
 

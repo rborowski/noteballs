@@ -3,14 +3,14 @@
     <div class="field">
       <div class="control">
         <textarea class="textarea" placeholder="Add a new note" ref="newNoteRef" v-model="content"
-          @keydown.enter.exact.prevent="editedNote ? submitEditNote() : addNote()" autofocus>{{ editContent }}</textarea>
+          @keydown.enter.exact.prevent="submit" autofocus>{{ editContent }}</textarea>
       </div>
     </div>
 
     <div class="field is-grouped is-grouped-right">
       <div class="control">
-        <button @click="editedNote ? submitEditNote() : addNote()" class="button is-success" :disabled="!content">
-          {{ editedNote ? "Submit edit" : "Add new note" }}
+        <button @click="submit" class="button is-success" :disabled="!content">
+          {{ storeNotes.editedNote ? "Submit edit" : "Add new note" }}
         </button>
       </div>
     </div>
@@ -19,31 +19,27 @@
 
 <script setup>
 import { ref, computed } from "vue";
+import { useNotesStore } from "../../stores/storeNotes"
 
-const props = defineProps(["editedNote"])
-const emit = defineEmits(["addNote", "submitEditNote"])
+const storeNotes = useNotesStore()
+
 const newNoteRef = ref(null)
 const content = ref("")
 
 const editContent = computed(() => {
-  if(!content || !props.editedNote) return
-  content.value = props.editedNote.content})
+  if (!content || !storeNotes.editedNote) return
+  content.value = storeNotes.editedNote.content
+})
 
-function addNote() {
+function submit() {
   if (!content.value) return
-  emit("addNote", content.value)
+  if (!storeNotes.editedNote) {
+    storeNotes.submitNewNote(content.value)
+  } else {
+    storeNotes.submitEditNote(content.value)
+  }
   content.value = ""
   newNoteRef.value.focus()
 }
-
-function submitEditNote() {
-  if (!content.value) return
-  emit("submitEditNote", content.value)
-  content.value = ""
-  newNoteRef.value.focus()
-}
-
-
-
 
 </script>
