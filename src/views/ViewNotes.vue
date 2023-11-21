@@ -9,7 +9,10 @@
 <script setup>
 import Note from "../components/layout/Note.vue";
 import Form from "../components/layout/Form.vue";
+import { useNotesStore } from "../stores/storeNotes"
 import { ref } from "vue";
+
+const storeNotes = useNotesStore()
 
 function addNewNote(content) {
   notes.value.unshift({
