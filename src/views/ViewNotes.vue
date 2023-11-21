@@ -1,8 +1,8 @@
 <template>
   <div class="notes">
     <h1>Notes</h1>
-    <Form v-model="newNote" @addNote="addNewNote" />
-    <Note v-for="note in notes" :key="note.id" :note="note" />
+    <Form @submitEditNote="submitEditNote" :editedNote="editedNote" @addNote="addNewNote" />
+    <Note @deleteNote="deleteNote" @editNote="editNote" v-for="note in notes" :key="note.id" :note="note" />
   </div>
 </template>
 
@@ -18,7 +18,20 @@ function addNewNote(content) {
   })
 }
 
-const newNote = ref('')
+function deleteNote(noteId) {
+  notes.value = notes.value.filter((note) => note.id !== noteId)
+}
+
+function editNote(noteId) {
+  editedNote.value = notes.value.find((note => note.id === noteId))
+}
+
+function submitEditNote(noteContent) {
+  notes.value.find((note => note.id === editedNote.value.id)).content = noteContent
+  editedNote.value = null
+}
+
+const editedNote = ref(null) 
 
 const notes = ref([
   {
