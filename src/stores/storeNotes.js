@@ -23,6 +23,7 @@ export const useNotesStore = defineStore("notes", () => {
   ]);
 
   const editedNote = ref(null);
+  const content = ref("");
 
   function deleteNote(noteId) {
     notes.value = notes.value.filter((note) => note.id !== noteId);
@@ -32,26 +33,28 @@ export const useNotesStore = defineStore("notes", () => {
     editedNote.value = notes.value.find((note) => note.id === noteId);
   }
 
-  function submitNewNote(content) {
+  function submitNewNote() {
     notes.value.unshift({
       id: notes.value.length + 1,
-      content,
+      content: content.value,
     });
+    content.value = "";
   }
 
-  function submitEditNote(noteContent) {
-    notes.value.find(
-      (note) => note.id === editedNote.value.id
-    ).content = noteContent;
+  function submitEditNote() {
+    notes.value.find((note) => note.id === editedNote.value.id).content =
+      content.value;
     editedNote.value = null;
+    content.value = "";
   }
 
   return {
     notes,
-    submitNewNote,
-    deleteNote,
-    submitEditNote,
     editedNote,
+    content,
+    deleteNote,
     editNote,
+    submitNewNote,
+    submitEditNote,
   };
 });

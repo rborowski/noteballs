@@ -1,6 +1,7 @@
 import { createRouter, createWebHashHistory } from "vue-router"
 import ViewNotes from "../views/ViewNotes.vue"
 import ViewStats from "../views/ViewStats.vue"
+import ViewEdit from "../views/ViewEdit.vue"
 
 const routes = [
   {
@@ -12,7 +13,12 @@ const routes = [
     path:"/stats",
     name: "Stats",
     component: ViewStats
-  }
+  },
+  {
+    path:"/edit/:id",
+    name: "Edit",
+    component: ViewEdit
+  },
 ]
 
 

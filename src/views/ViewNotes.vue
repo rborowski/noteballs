@@ -1,7 +1,11 @@
 <template>
   <div class="notes">
     <h1>Notes</h1>
-    <Form />
+    <Form>
+      <template #button-name>
+        Add new note
+      </template>
+    </Form>
     <Note v-for="note in storeNotes.notes" :key="note.id" :note="note" />
   </div>
 </template>
