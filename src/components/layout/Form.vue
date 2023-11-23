@@ -1,16 +1,24 @@
 <template>
-  <div class="card mb-5 p-4 " :class="!storeNotes.editedNote ? 'has-background-success-dark' : 'has-background-link-dark' ">
+  <div class="card mb-5 p-4 " :class="`has-background-${bgColor}-dark`">
     <div class="field">
       <div class="control">
         <label for="textarea" class="label has-text-white">{{ label }}</label>
-        <textarea class="textarea" ref="textarea" id="textarea" placeholder="Type text..." v-model="storeNotes.content"
-          @keydown.enter.exact.prevent="submit" autofocus></textarea>
+        <textarea
+          :placeholder="placeholder"
+          :value="modelValue"
+          @keydown.enter.exact.prevent="$emit('enter-submit')"
+          @input="$emit('update:modelValue', $event.target.value)"
+          id="textarea"
+          class="textarea"
+          ref="textarea"
+          autofocus
+        />
       </div>
     </div>
 
     <div class="field is-grouped is-grouped-right">
       <div class="control">
-        <slot name="button" />
+        <slot name="buttons" />
       </div>
     </div>
   </div>
@@ -18,33 +26,21 @@
 
 <script setup>
 import { ref } from "vue";
-import { useNotesStore } from "../../stores/storeNotes"
-import { useRouter } from "vue-router";
-
-const storeNotes = useNotesStore()
-const router = useRouter()
 
 const props = defineProps({
-  label: {type: String}
+  modelValue: { type: String, required: true },
+  bgColor: { type: String },
+  placeholder: { type: String },
+  label: { type: String },
+  isEdit: { type: Boolean, default: false }
 })
 
 const textarea = ref(null)
-
-function submit() {
-  if (!storeNotes.content) return
-  if (!storeNotes.editedNote) {
-    storeNotes.submitNewNote()
-    focusTextarea()
-  } else {
-    storeNotes.submitEditNote()
-    router.push({ name: "Notes" })
-  }
-}
 
 function focusTextarea() {
   textarea.value.focus()
 }
 
-defineExpose({focusTextarea})
+defineExpose({ focusTextarea })
 
 </script>

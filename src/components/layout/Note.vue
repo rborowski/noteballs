@@ -9,8 +9,7 @@
       </div>
     </div>
     <footer class="card-footer ">
-      <RouterLink :to="{ name: 'Edit', params: { id: note.id } }" @click="storeNotes.editNote(note.id)"
-        class="card-footer-item">Edit</RouterLink>
+      <RouterLink :to="{ name: 'Edit', params: { id: note.id } }" class="card-footer-item">Edit</RouterLink>
       <a @click.prevent="storeNotes.deleteNote(note.id)" class="card-footer-item">Delete</a>
     </footer>
   </div>
@@ -25,8 +24,6 @@ const storeNotes = useNotesStore()
 const props = defineProps({ note: { type: Object, required: true } })
 
 const noteLength = computed(() => props.note.content.length + " " + (props.note.content.length > 1 ? "characters" : "character"))
-
-
 
 </script>
 

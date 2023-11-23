@@ -1,8 +1,19 @@
 <template>
   <div class="notes">
-    <Form ref="editNoteRef" label="Add a new note">
-      <template #button>
-        <button @click="submitNewNote" class="button is-success" :disabled="!storeNotes.content">
+    <Form
+      v-model="noteContent"
+      @enter-submit="handleSubmit"
+      bgColor="success"
+      label="Add a new note"
+      placeholder="Add a new note..."
+      ref="noteFormRef"
+    >
+      <template #buttons>
+        <button
+          :disabled="!noteContent"
+          @click="handleSubmit"
+          class="button is-success"
+        >
           Add new note
         </button>
       </template>
@@ -18,12 +29,15 @@ import { useNotesStore } from "../stores/storeNotes"
 import { ref } from "vue";
 
 const storeNotes = useNotesStore()
-const editNoteRef = ref(null)
+const noteFormRef = ref(null)
 
-function submitNewNote() {
-  if (!storeNotes.content) return
-  storeNotes.submitNewNote()
-  editNoteRef.value.focusTextarea()
+const noteContent = ref("")
+
+function handleSubmit() {
+  if (!noteContent.value) return
+  storeNotes.submitNewNote(noteContent.value)
+  noteFormRef.value.focusTextarea()
+  noteContent.value = ""
 }
 
 </script>

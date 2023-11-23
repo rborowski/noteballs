@@ -22,39 +22,33 @@ export const useNotesStore = defineStore("notes", () => {
     },
   ]);
 
-  const editedNote = ref(null);
-  const content = ref("");
-
   function deleteNote(noteId) {
     notes.value = notes.value.filter((note) => note.id !== noteId);
   }
 
-  function editNote(noteId) {
-    editedNote.value = notes.value.find((note) => note.id === noteId);
-  }
-
-  function submitNewNote() {
+  function submitNewNote(content) {
     notes.value.unshift({
       id: notes.value.length + 1,
-      content: content.value,
+      content,
     });
-    content.value = "";
   }
 
-  function submitEditNote() {
-    notes.value.find((note) => note.id === editedNote.value.id).content =
-      content.value;
-    editedNote.value = null;
-    content.value = "";
+  function submitEditNote(editedNote) {
+    console.log(editedNote.id)
+    notes.value.find(
+      (note) => note.id === editedNote.id
+    ).content = editedNote.content;
   }
+
+  const getNoteContent = computed(() => (id) =>
+    notes.value.find((note) => note.id === id)
+  );
 
   return {
     notes,
-    editedNote,
-    content,
     deleteNote,
-    editNote,
     submitNewNote,
     submitEditNote,
+    getNoteContent,
   };
 });

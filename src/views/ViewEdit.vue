@@ -1,11 +1,19 @@
 <template>
   <div class="edit-note">
-    <Form label="Add a new note">
-      <template #button>
+    <Form
+      v-model="noteContent"
+      @enter-submit="handleSubmit"
+      bgColor="link"
+      label="Edit note"
+      placeholder="Edit note..."
+      ref="noteFormRef"
+      :isEdit="true"
+    >
+      <template #buttons>
         <button @click="$router.back()" class="button is-light mr-2">
           Cancel
         </button>
-        <button @click="submitEditNote" class="button is-link" :disabled="!storeNotes.content">
+        <button @click="handleSubmit" class="button is-link" :disabled="!noteContent">
           Save changes
         </button>
       </template>
@@ -16,22 +24,24 @@
 <script setup>
 import Form from "../components/layout/Form.vue";
 import { useNotesStore } from "../stores/storeNotes"
-import { onMounted } from "vue";
-import { useRouter } from "vue-router";
+import { ref } from "vue";
+import { useRouter, useRoute } from "vue-router";
 
 const storeNotes = useNotesStore()
+const route = useRoute()
 const router = useRouter()
 
-function submitEditNote() {
-  if (!storeNotes.content) return
-  storeNotes.submitEditNote()
-  router.push({ name: "Notes" })
-}
+const noteFormRef = ref(null)
+const noteContent = ref("")
 
-onMounted(() => {
-  if (storeNotes.editedNote) {
-    storeNotes.content = storeNotes.editedNote.content;
-  }
-})
+noteContent.value = storeNotes.getNoteContent(+route.params.id).content
+
+
+function handleSubmit() {
+  if (!noteContent.value) return
+  storeNotes.submitEditNote({id: +route.params.id, content: noteContent.value})
+  router.push({ name: "Notes" })
+  noteFormRef.value.focusTextarea()
+}
 
 </script>
