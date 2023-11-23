@@ -26,6 +26,8 @@ const props = defineProps({ note: { type: Object, required: true } })
 
 const noteLength = computed(() => props.note.content.length + " " + (props.note.content.length > 1 ? "characters" : "character"))
 
+
+
 </script>
 
 <style scoped>
