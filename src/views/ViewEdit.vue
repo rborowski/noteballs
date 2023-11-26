@@ -39,7 +39,7 @@ noteContent.value = storeNotes.getNoteContent(+route.params.id).content
 
 function handleSubmit() {
   if (!noteContent.value) return
-  storeNotes.submitEditNote({id: +route.params.id, content: noteContent.value})
+  storeNotes.submitEditNote(+route.params.id, noteContent.value)
   router.push({ name: "Notes" })
   noteFormRef.value.focusTextarea()
 }

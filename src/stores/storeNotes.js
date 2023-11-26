@@ -33,15 +33,18 @@ export const useNotesStore = defineStore("notes", () => {
     });
   }
 
-  function submitEditNote(editedNote) {
-    console.log(editedNote.id)
-    notes.value.find(
-      (note) => note.id === editedNote.id
-    ).content = editedNote.content;
+  function submitEditNote(id, content) {
+    notes.value.find((note) => note.id === id).content = content;
   }
 
   const getNoteContent = computed(() => (id) =>
     notes.value.find((note) => note.id === id)
+  );
+
+  const getTotalNotesCount = computed(() => notes.value.length);
+
+  const getTotalCharactersCount = computed(() =>
+    notes.value.map((note) => note.content.length).reduce((a, b) => a + b, 0)
   );
 
   return {
@@ -50,5 +53,7 @@ export const useNotesStore = defineStore("notes", () => {
     submitNewNote,
     submitEditNote,
     getNoteContent,
+    getTotalNotesCount,
+    getTotalCharactersCount,
   };
 });
