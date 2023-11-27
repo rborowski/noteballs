@@ -27,6 +27,7 @@ import Note from "../components/layout/Note.vue";
 import Form from "../components/layout/Form.vue";
 import { useNotesStore } from "../stores/storeNotes"
 import { ref } from "vue";
+import { useWatchCharacters } from "../use/useWatchCharacters";
 
 const storeNotes = useNotesStore()
 const noteFormRef = ref(null)
@@ -39,5 +40,7 @@ function handleSubmit() {
   noteFormRef.value.focusTextarea()
   noteContent.value = ""
 }
+
+useWatchCharacters(noteContent, 100)
 
 </script>
