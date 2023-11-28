@@ -17,7 +17,4 @@ import { useNotesStore } from "./stores/storeNotes"
 const storeNotes = useNotesStore()
 
 onMounted(() => storeNotes.getNotes())
-
-
-
 </script>
