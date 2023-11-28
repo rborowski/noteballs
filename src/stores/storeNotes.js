@@ -1,6 +1,6 @@
 import { defineStore } from "pinia";
 import { ref, computed } from "vue";
-import { collection, onSnapshot, doc, setDoc, deleteDoc, query, orderBy } from "firebase/firestore";
+import { collection, doc, onSnapshot, addDoc, updateDoc, deleteDoc, query, orderBy } from "firebase/firestore";
 import { db } from "../js/firebase";
 
 const notesCollection = collection(db, "notes")
@@ -9,12 +9,13 @@ export const useNotesStore = defineStore("notes", () => {
   const notes = ref([]);
 
   async function getNotes() {
-    const q = query(notesCollection, orderBy("id", "desc"))
+    const q = query(notesCollection, orderBy("date", "desc"))
     onSnapshot(q, (querySnapshot) => {
       let dbNotes = [];
       querySnapshot.forEach((doc) => {
         let note = {
           id: doc.id,
+          date: doc.data().date,
           content: doc.data().content,
         };
         dbNotes.push(note);
@@ -28,16 +29,16 @@ export const useNotesStore = defineStore("notes", () => {
   }
 
   async function submitNewNote(content) {
-    const id = new Date().getTime().toString()
-    await setDoc(doc(notesCollection, id), {
-      id,
+    const date = new Date().getTime().toString()
+    await addDoc(notesCollection, {
+      date,
       content,
     });
   }
 
   async function submitEditNote(id, content) {
     const noteRef = doc(notesCollection, id);
-    await setDoc(noteRef, { content }, { merge: true } );
+    await updateDoc(noteRef, { content });
   }
 
   const getNoteContent = computed(() => (id) =>
