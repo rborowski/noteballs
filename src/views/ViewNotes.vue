@@ -41,6 +41,6 @@ function handleSubmit() {
   noteContent.value = ""
 }
 
-useWatchCharacters(noteContent, 100)
+useWatchCharacters(noteContent, 300)
 
 </script>

@@ -34,12 +34,12 @@ const router = useRouter()
 const noteFormRef = ref(null)
 const noteContent = ref("")
 
-noteContent.value = storeNotes.getNoteContent(+route.params.id).content
+noteContent.value = storeNotes.getNoteContent(route.params.id).content
 
 
 function handleSubmit() {
   if (!noteContent.value) return
-  storeNotes.submitEditNote(+route.params.id, noteContent.value)
+  storeNotes.submitEditNote(route.params.id, noteContent.value)
   router.push({ name: "Notes" })
   noteFormRef.value.focusTextarea()
 }

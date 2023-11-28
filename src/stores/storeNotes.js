@@ -23,18 +23,19 @@ export const useNotesStore = defineStore("notes", () => {
   }
 
   async function deleteNote(noteId) {
-    // notes.value = notes.value.filter((note) => note.id !== noteId);
     await deleteDoc(doc(notesCollection, noteId.toString()));
   }
 
   async function submitNewNote(content) {
-    await setDoc(doc(notesCollection, (notes.value.length + 1).toString()), {
+    const id = new Date().getTime().toString()
+    await setDoc(doc(notesCollection, id), {
       content,
     });
   }
 
-  function submitEditNote(id, content) {
-    notes.value.find((note) => note.id === id).content = content;
+  async function submitEditNote(id, content) {
+    const noteRef = doc(notesCollection, id);
+    await setDoc(noteRef, { content } );
   }
 
   const getNoteContent = computed(() => (id) =>

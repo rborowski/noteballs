@@ -12,7 +12,7 @@
           class="textarea"
           ref="textarea"
           v-autofocus
-          maxlength="100"
+          maxlength="300"
         />
       </div>
     </div>
