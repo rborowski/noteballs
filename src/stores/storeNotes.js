@@ -1,26 +1,25 @@
 import { defineStore } from "pinia";
 import { ref, computed } from "vue";
+import { collection, getDocs, onSnapshot, doc } from "firebase/firestore";
+import { db } from "../js/firebase";
 
 export const useNotesStore = defineStore("notes", () => {
-  const notes = ref([
-    {
-      id: 1,
-      content:
-        "Lorem ipsum dolor sit amet consectetur adipisicing elit. In adipisci odio asperiores neque. Facere ut, neque, blanditiis maxime voluptas dolore nihil inventore expedita itaque delectus molestiae? Laboriosam ullam ipsam ut?",
-    },
-    {
-      id: 2,
-      content: `Lorem ipsum dolor sit amet consectetur adipisicing elit?`,
-    },
-    {
-      id: 3,
-      content: `Lorem ipsum dolor sit amet consectetur dipisci odio asperiores neque. Facere ut, neque, blanditiis maxime voluptas dolore nihil inventore expedita itaque delectus molestiae? Laboriosam ullam ipsam ut?`,
-    },
-    {
-      id: 4,
-      content: `Lorem ipsum dolor sit amet consectetur Facere ut, neque, blanditiis maxime voluptas dolore nihil inventore expedita itaque delectus molestiae? Laboriosam ullam ipsam ut?`,
-    },
-  ]);
+  const notes = ref([]);
+
+  async function getNotes() {
+
+    onSnapshot(collection(db, "notes"), (querySnapshot) => {
+      let dbNotes = []
+      querySnapshot.forEach((doc) => {
+          let note = {
+            id: doc.id,
+            content: doc.data().content
+          }
+          dbNotes.push(note)
+        })
+        notes.value = dbNotes
+    });
+  }
 
   function deleteNote(noteId) {
     notes.value = notes.value.filter((note) => note.id !== noteId);
@@ -55,5 +54,6 @@ export const useNotesStore = defineStore("notes", () => {
     getNoteContent,
     getTotalNotesCount,
     getTotalCharactersCount,
+    getNotes,
   };
 });
