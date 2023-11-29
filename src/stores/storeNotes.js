@@ -8,6 +8,8 @@ const notesCollection = collection(db, "notes")
 export const useNotesStore = defineStore("notes", () => {
   const notes = ref([]);
 
+  const notesLoaded = ref(false);
+
   async function getNotes() {
     const q = query(notesCollection, orderBy("date", "desc"))
     onSnapshot(q, (querySnapshot) => {
@@ -21,6 +23,7 @@ export const useNotesStore = defineStore("notes", () => {
         dbNotes.push(note);
       });
       notes.value = dbNotes;
+      notesLoaded.value = true
     });
   }
 
@@ -53,6 +56,7 @@ export const useNotesStore = defineStore("notes", () => {
 
   return {
     notes,
+    notesLoaded,
     deleteNote,
     submitNewNote,
     submitEditNote,

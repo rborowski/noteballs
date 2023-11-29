@@ -18,6 +18,13 @@
         </button>
       </template>
     </Form>
+    <progress class="progress is-large is-success" max="100" v-if="!storeNotes.notesLoaded"/>
+    <div
+      v-if="!storeNotes.notes.length && storeNotes.notesLoaded"
+      class="is-size-4 has-text-centered has-text-grey-light py-6"
+    >
+    There are no notes added!
+    </div>
     <Note v-for="note in storeNotes.notes" :key="note.id" :note="note" />
   </div>
 </template>
