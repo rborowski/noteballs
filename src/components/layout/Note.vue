@@ -3,8 +3,9 @@
     <div class="card-content">
       <div class="content">
         {{ note.content }}
-        <div class="has-text-right has-text-grey-light mt-2">
-          <small>{{ noteLength }}</small>
+        <div class="is-flex is-justify-content-space-between has-text-grey-light mt-2">
+          <div><small>{{ dateFormated }}</small></div>
+          <div><small>{{ noteLength }}</small></div>
         </div>
       </div>
     </div>
@@ -19,10 +20,16 @@
 <script setup>
 import { computed, reactive } from "vue";
 import ModalDeleteNote from "./ModalDeleteNote.vue";
+import { useDateFormat } from "@vueuse/core";
 
 const props = defineProps({ note: { type: Object, required: true } })
 
 const noteLength = computed(() => props.note.content.length + " " + (props.note.content.length > 1 ? "characters" : "character"))
+
+const dateFormated = computed(() => {
+  const date = new Date(+props.note.date)
+  return useDateFormat(date , "YYYY-MM-DD HH:mm").value
+})
 
 const modals = reactive({
   deleteNote: false
