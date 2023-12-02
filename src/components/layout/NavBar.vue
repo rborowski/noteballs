@@ -20,9 +20,9 @@
         <div id="navbarBasicExample" ref="navbarMenuRef" class="navbar-menu" :class="{ 'is-active': isMobileMenu }">
           <div class="navbar-start">
             <div class="navbar-item buttons">
-              <button :to="{ name: 'Auth' }" @click="isMobileMenu = !isMobileMenu" class="button is-small is-info"
+              <button @click="storeAuth.logoutUser" class="button is-small is-info"
                 active-class="is-active">
-                Signup
+                Logout
               </button>
             </div>
           </div>
@@ -46,6 +46,9 @@
 <script setup>
 import { ref } from "vue"
 import { onClickOutside } from '@vueuse/core'
+import { useAuthStore } from "../../stores/storeAuth";
+
+const storeAuth = useAuthStore();
 
 const navbarMenuRef = ref(null)
 const isMobileMenu = ref(false)
