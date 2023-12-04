@@ -33,7 +33,7 @@
 import Note from "../components/layout/Note.vue";
 import Form from "../components/layout/Form.vue";
 import { useNotesStore } from "../stores/storeNotes"
-import { ref } from "vue";
+import { ref, onMounted } from "vue";
 import { useWatchCharacters } from "../use/useWatchCharacters";
 
 const storeNotes = useNotesStore()
@@ -49,5 +49,6 @@ function handleSubmit() {
 }
 
 useWatchCharacters(noteContent, 300)
+onMounted(() => storeNotes.getNotes())
 
 </script>

@@ -81,7 +81,7 @@ function onSubmit() {
   }
 
   if(!register.value) {
-    return storeAuth.logUser(credentials)
+    return storeAuth.loginUser(credentials)
   }
 
   return storeAuth.registerUser(credentials)

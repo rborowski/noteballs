@@ -1,10 +1,29 @@
 import { defineStore } from "pinia";
 import { auth } from "../js/firebase";
-import { createUserWithEmailAndPassword, signOut } from "firebase/auth";
+import {
+  createUserWithEmailAndPassword,
+  signInWithEmailAndPassword,
+  signOut,
+  onAuthStateChanged,
+} from "firebase/auth";
+import { ref } from "vue";
 
-export const useAuthStore = defineStore("auth", () => {
+export const useAuthStore = defineStore("authStore", () => {
+  
+  const user = ref({})
+  
+  function init() {
+    onAuthStateChanged(auth, (userData) => {
+      if (userData) {
+        user.value.id = userData.uid
+        user.value.email = userData.email
+      } else {
+        user.value = {}
+      }
+    });
+  }
+  
   function registerUser(credentials) {
-    
     createUserWithEmailAndPassword(
       auth,
       credentials.email,
@@ -12,30 +31,39 @@ export const useAuthStore = defineStore("auth", () => {
     )
       .then((userCredential) => {
         const user = userCredential.user;
-        console.log("register", user);
       })
       .catch((error) => {
         const errorCode = error.code;
         const errorMessage = error.message;
-        
       });
   }
 
-  function logUser(credentials) {
-    console.log("login");
+  function loginUser(credentials) {
+    signInWithEmailAndPassword(auth, credentials.email, credentials.password)
+      .then((userCredential) => {
+        const user = userCredential.user;
+      })
+      .catch((error) => {
+        const errorCode = error.code;
+        const errorMessage = error.message;
+      });
   }
 
   function logoutUser() {
-    signOut(auth).then(() => {
-      console.log("successfully logout")
-    }).catch((e)=> {
-      console.log("logout failed", e.message)
-    })
+    signOut(auth)
+      .then(() => {
+        console.log("successfully logout");
+      })
+      .catch((e) => {
+        console.log("logout failed", e.message);
+      });
   }
 
   return {
+    user,
+    init,
     registerUser,
-    logUser,
+    loginUser,
     logoutUser,
   };
 });
