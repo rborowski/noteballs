@@ -19,10 +19,10 @@
 
         <div id="navbarBasicExample" ref="navbarMenuRef" class="navbar-menu" :class="{ 'is-active': isMobileMenu }">
           <div class="navbar-start">
-            <div class="navbar-item buttons">
-              <button @click="storeAuth.logoutUser" class="button is-small is-info"
+            <div class="navbar-item buttons" v-if="storeAuth.user.id">
+              <button @click="logoutButtonHandle" class="button is-small is-info" 
                 active-class="is-active">
-                Logout
+                Logout {{ storeAuth.user.email }}
               </button>
             </div>
           </div>
@@ -53,6 +53,11 @@ const storeAuth = useAuthStore();
 const navbarMenuRef = ref(null)
 const isMobileMenu = ref(false)
 const burgerButtonRef = ref(null)
+
+function logoutButtonHandle() {
+  storeAuth.logoutUser()
+  isMobileMenu.value = !isMobileMenu.value
+}
 
 onClickOutside(navbarMenuRef, () => isMobileMenu.value = false, { ignore: [burgerButtonRef] })
 

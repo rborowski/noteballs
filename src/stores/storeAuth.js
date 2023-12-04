@@ -7,18 +7,22 @@ import {
   onAuthStateChanged,
 } from "firebase/auth";
 import { ref } from "vue";
+import { useRouter } from "vue-router"
 
 export const useAuthStore = defineStore("authStore", () => {
   
   const user = ref({})
+  const router = useRouter()
   
   function init() {
     onAuthStateChanged(auth, (userData) => {
       if (userData) {
         user.value.id = userData.uid
         user.value.email = userData.email
+        router.push({ name: "Notes" })
       } else {
         user.value = {}
+        router.replace({ name: "Auth" })
       }
     });
   }
