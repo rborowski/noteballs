@@ -8,6 +8,7 @@ import {
 } from "firebase/auth";
 import { ref } from "vue";
 import { useRouter } from "vue-router"
+import { useNotesStore } from "../stores/storeNotes"
 
 export const useAuthStore = defineStore("authStore", () => {
   
@@ -15,11 +16,15 @@ export const useAuthStore = defineStore("authStore", () => {
   const router = useRouter()
   
   function init() {
+    
+    const storeNotes = useNotesStore()
+
     onAuthStateChanged(auth, (userData) => {
       if (userData) {
         user.value.id = userData.uid
         user.value.email = userData.email
         router.push({ name: "Notes" })
+        storeNotes.init()
       } else {
         user.value = {}
         router.replace({ name: "Auth" })
