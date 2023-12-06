@@ -1,25 +1,33 @@
 import { defineStore } from "pinia";
 import { ref, computed } from "vue";
-import { collection, doc, onSnapshot, addDoc, updateDoc, deleteDoc, query, orderBy } from "firebase/firestore";
+import {
+  collection, doc, query, orderBy,
+  addDoc, updateDoc, deleteDoc,
+  onSnapshot,
+} from "firebase/firestore";
 import { db } from "../js/firebase";
 import { useAuthStore } from "./storeAuth";
 
-let notesCollection
-let q
+let notesCollection;
+let q;
+let unsub;
 
 export const useNotesStore = defineStore("notes", () => {
   const notes = ref([]);
   const notesLoaded = ref(false);
 
   function init() {
-    const storeAuth = useAuthStore()
-    notesCollection = collection(db, "users", storeAuth.user.id,"notes")
-    q = query(notesCollection, orderBy("date", "desc"))
-    getNotes()
+    const storeAuth = useAuthStore();
+    notesCollection = collection(db, "users", storeAuth.user.id, "notes");
+    q = query(notesCollection, orderBy("date", "desc"));
+    getNotes();
   }
 
   async function getNotes() {
-    onSnapshot(q, (querySnapshot) => {
+
+    if (unsub) unsub() // unsubscribe if there is already an onSnapshot listener
+
+    unsub = onSnapshot(q, (querySnapshot) => {
       let dbNotes = [];
       querySnapshot.forEach((doc) => {
         let note = {
@@ -30,8 +38,15 @@ export const useNotesStore = defineStore("notes", () => {
         dbNotes.push(note);
       });
       notes.value = dbNotes;
-      notesLoaded.value = true
+      notesLoaded.value = true;
     });
+  }
+
+  function clearNotes() {
+    notes.value = [];
+    notesLoaded.value = false;
+    notesCollection = {};
+    if (unsub) unsub() // unsubscribe if there is already an onSnapshot listener
   }
 
   async function deleteNote(noteId) {
@@ -39,7 +54,7 @@ export const useNotesStore = defineStore("notes", () => {
   }
 
   async function submitNewNote(content) {
-    const date = new Date().getTime().toString()
+    const date = new Date().getTime().toString();
     await addDoc(notesCollection, {
       date,
       content,
@@ -62,15 +77,16 @@ export const useNotesStore = defineStore("notes", () => {
   );
 
   return {
-    init,
     notes,
     notesLoaded,
+    init,
+    getNotes,
+    clearNotes,
     deleteNote,
     submitNewNote,
     submitEditNote,
     getNoteContent,
     getTotalNotesCount,
     getTotalCharactersCount,
-    getNotes,
   };
 });
