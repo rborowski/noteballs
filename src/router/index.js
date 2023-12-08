@@ -1,36 +1,48 @@
-import { createRouter, createWebHashHistory } from "vue-router"
-import ViewNotes from "../views/ViewNotes.vue"
-import ViewStats from "../views/ViewStats.vue"
-import ViewEdit from "../views/ViewEdit.vue"
-import ViewAuth from "../views/ViewAuth.vue"
+import { useStoreAuth } from "../stores/storeAuth";
+import { createRouter, createWebHashHistory } from "vue-router";
+import ViewNotes from "../views/ViewNotes.vue";
+import ViewStats from "../views/ViewStats.vue";
+import ViewEdit from "../views/ViewEdit.vue";
+import ViewAuth from "../views/ViewAuth.vue";
 
 const routes = [
   {
     path: "/",
     name: "Notes",
-    component: ViewNotes
+    component: ViewNotes,
   },
   {
-    path:"/stats",
+    path: "/stats",
     name: "Stats",
-    component: ViewStats
+    component: ViewStats,
   },
   {
-    path:"/auth",
+    path: "/auth",
     name: "Auth",
-    component: ViewAuth
+    component: ViewAuth,
   },
   {
-    path:"/edit/:id",
+    path: "/edit/:id",
     name: "Edit",
-    component: ViewEdit
+    component: ViewEdit,
   },
-]
-
+];
 
 const router = createRouter({
   history: createWebHashHistory(),
-  routes
-})
+  routes,
+});
 
-export default router
+// navigation guards
+router.beforeEach(async (to) => {
+  const storeAuth = useStoreAuth();
+
+  await new Promise((resolve) => {
+    if (storeAuth.userLoaded) return resolve();
+  });
+
+  if (storeAuth.user.id && to.name === "Auth") return { name: "Notes" };
+  if (!storeAuth.user.id && to.name !== "Auth") return { name: "Auth" };
+});
+
+export default router;

@@ -20,8 +20,7 @@
         <div id="navbarBasicExample" ref="navbarMenuRef" class="navbar-menu" :class="{ 'is-active': isMobileMenu }">
           <div class="navbar-start">
             <div class="navbar-item buttons" v-if="storeAuth.user.id">
-              <button @click="logoutButtonHandle" class="button is-small is-info" 
-                active-class="is-active">
+              <button @click="logoutButtonHandle" class="button is-small is-info" active-class="is-active">
                 Logout {{ storeAuth.user.email }}
               </button>
             </div>
@@ -46,9 +45,9 @@
 <script setup>
 import { ref } from "vue"
 import { onClickOutside } from '@vueuse/core'
-import { useAuthStore } from "../../stores/storeAuth";
+import { useStoreAuth } from "../../stores/storeAuth";
 
-const storeAuth = useAuthStore();
+const storeAuth = useStoreAuth();
 
 const navbarMenuRef = ref(null)
 const isMobileMenu = ref(false)

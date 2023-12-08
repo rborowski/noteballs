@@ -12,9 +12,9 @@
 <script setup>
 import NavBar from './components/layout/NavBar.vue';
 import { onMounted } from "vue";
-import { useAuthStore } from "./stores/storeAuth";
+import { useStoreAuth } from "./stores/storeAuth";
 
-const storeAuth = useAuthStore()
+const storeAuth = useStoreAuth()
 
 onMounted(() => storeAuth.init())
 

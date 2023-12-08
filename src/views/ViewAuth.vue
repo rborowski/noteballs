@@ -16,32 +16,19 @@
         <div class="title has-text-centered">
           {{ formTitle }}
         </div>
-        <form
-          @submit.prevent="onSubmit"
-        >
+        <form @submit.prevent="onSubmit">
 
 
           <div class="field">
             <label class="label">Email</label>
             <div class="control">
-              <input
-                v-model="credentials.email"
-                class="input"
-                placeholder="e.g. alexsmith@gmail.com"
-                type="email"
-                
-              >
+              <input v-model="credentials.email" class="input" placeholder="e.g. alexsmith@gmail.com" type="email">
             </div>
           </div>
           <div class="field">
             <label class="label">Password</label>
             <div class="control">
-              <input
-                v-model="credentials.password"
-                class="input"
-                placeholder="Enter a password"
-                type="password"
-              >
+              <input v-model="credentials.password" class="input" placeholder="Enter a password" type="password">
             </div>
           </div>
 
@@ -63,9 +50,9 @@
 
 <script setup>
 import { ref, computed, reactive } from "vue";
-import { useAuthStore } from "../stores/storeAuth";
+import { useStoreAuth } from "../stores/storeAuth";
 
-const storeAuth = useAuthStore()
+const storeAuth = useStoreAuth()
 
 const register = ref(false)
 const credentials = reactive({
@@ -77,10 +64,10 @@ const formTitle = computed(() => register.value ? "Register" : "Login")
 
 function onSubmit() {
   if (!credentials.email || !credentials.password) {
-   return alert("Please enter e-mail and password")
+    return alert("Please enter e-mail and password")
   }
 
-  if(!register.value) {
+  if (!register.value) {
     return storeAuth.loginUser(credentials)
   }
 

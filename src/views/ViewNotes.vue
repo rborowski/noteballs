@@ -51,3 +51,4 @@ function handleSubmit() {
 useWatchCharacters(noteContent, 300)
 
 </script>
+

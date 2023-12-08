@@ -1,12 +1,17 @@
 import { defineStore } from "pinia";
 import { ref, computed } from "vue";
 import {
-  collection, doc, query, orderBy,
-  addDoc, updateDoc, deleteDoc,
+  collection,
+  doc,
+  query,
+  orderBy,
+  addDoc,
+  updateDoc,
+  deleteDoc,
   onSnapshot,
 } from "firebase/firestore";
 import { db } from "../js/firebase";
-import { useAuthStore } from "./storeAuth";
+import { useStoreAuth } from "./storeAuth";
 
 let notesCollection;
 let q;
@@ -17,15 +22,14 @@ export const useNotesStore = defineStore("notes", () => {
   const notesLoaded = ref(false);
 
   function init() {
-    const storeAuth = useAuthStore();
+    const storeAuth = useStoreAuth();
     notesCollection = collection(db, "users", storeAuth.user.id, "notes");
     q = query(notesCollection, orderBy("date", "desc"));
     getNotes();
   }
 
   async function getNotes() {
-
-    if (unsub) unsub() // unsubscribe if there is already an onSnapshot listener
+    if (unsub) unsub(); // unsubscribe if there is already an onSnapshot listener
 
     unsub = onSnapshot(q, (querySnapshot) => {
       let dbNotes = [];
@@ -46,7 +50,7 @@ export const useNotesStore = defineStore("notes", () => {
     notes.value = [];
     notesLoaded.value = false;
     notesCollection = {};
-    if (unsub) unsub() // unsubscribe if there is already an onSnapshot listener
+    if (unsub) unsub(); // unsubscribe if there is already an onSnapshot listener
   }
 
   async function deleteNote(noteId) {

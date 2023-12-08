@@ -7,32 +7,33 @@ import {
   onAuthStateChanged,
 } from "firebase/auth";
 import { ref } from "vue";
-import { useRouter } from "vue-router"
-import { useNotesStore } from "../stores/storeNotes"
+import { useRouter } from "vue-router";
+import { useNotesStore } from "../stores/storeNotes";
 
-export const useAuthStore = defineStore("authStore", () => {
-  
-  const user = ref({})
-  const router = useRouter()
-  
+export const useStoreAuth = defineStore("storeAuth", () => {
+  const user = ref({});
+  const userLoaded = ref(false);
+  const router = useRouter();
+
   function init() {
-    
-    const storeNotes = useNotesStore()
+    const storeNotes = useNotesStore();
 
     onAuthStateChanged(auth, (userData) => {
       if (userData) {
-        user.value.id = userData.uid
-        user.value.email = userData.email
-        router.push({ name: "Notes" })
-        storeNotes.init()
+        user.value.id = userData.uid;
+        user.value.email = userData.email;
+        userLoaded.value = true;
+        router.push({ name: "Notes" });
+        storeNotes.init();
       } else {
-        user.value = {}
-        storeNotes.clearNotes()
-        router.replace({ name: "Auth" })
+        user.value = {};
+        storeNotes.clearNotes();
+        userLoaded.value = true;
+        router.replace({ name: "Auth" });
       }
     });
   }
-  
+
   function registerUser(credentials) {
     createUserWithEmailAndPassword(
       auth,
@@ -71,6 +72,7 @@ export const useAuthStore = defineStore("authStore", () => {
 
   return {
     user,
+    userLoaded,
     init,
     registerUser,
     loginUser,
