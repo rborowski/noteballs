@@ -41,7 +41,7 @@ router.beforeEach(async (to) => {
     if (storeAuth.userLoaded) return resolve();
   });
 
-  if (storeAuth.user.id && to.name === "Auth") return { name: "Notes" };
+  if (storeAuth.user.id && to.name === "Auth") return false;
   if (!storeAuth.user.id && to.name !== "Auth") return { name: "Auth" };
 });
 
