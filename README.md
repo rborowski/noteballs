@@ -1,6 +1,7 @@
 # noteballs
 
-This template should help get you started developing with Vue 3 in Vite.
+This app is built with Vue + bulma + Firebase. It's a simple todo manager.
+Fully functional example is available here: https://my-noteballs.netlify.app/
 
 ## Recommended IDE Setup
 
